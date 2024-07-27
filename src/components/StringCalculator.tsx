@@ -2,14 +2,21 @@ import React, { useState } from 'react';
 
 const StringCalculator: React.FC = () => {
   const [input, setInput] = useState('');
-  const [result, setResult] = useState<number | null>(null);
+  const [result, setResult] = useState<any>(null);
 
   const add = (numbers: string): number => {
-    if (numbers == '') return 0;
-    const numArray = numbers.split(',').map(Number);
-    return numArray.reduce((sum, num) => sum + num, 0);
+    if (numbers === '') return 0;
+    const normalizedNumbers = numbers.replace(/\r\n|\r/g, '\n');
+    const numArray = normalizedNumbers.split(/[\n,]+/).map((num) => {
+      const parsedNum = parseInt(num.trim(), 10); 
+      console.log(`Parsed number from "${num}":`, parsedNum);
+      return isNaN(parsedNum) ? 0 : parsedNum; 
+    });
+    const sum = numArray.reduce((total, num) => total + num, 0);  
+    return sum;
   };
-
+  
+  
   const handleAdd = () => {
     try {
       const sum = add(input);
@@ -23,10 +30,9 @@ const StringCalculator: React.FC = () => {
   return (
     <div className="flex flex-col items-center p-4">
       <h1 className="text-2xl mb-4">String Calculator</h1>
-      <input
-        type="text"
+      <textarea
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) => { console.log('Input onChange:', e.target.value); setInput(e.target.value)}}
         className="border p-2 mb-4"
         placeholder="Enter numbers"
       />

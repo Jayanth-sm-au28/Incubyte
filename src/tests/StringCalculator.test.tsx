@@ -45,3 +45,15 @@ test('adds "1,2,3,4,5" to equal 15', () => {
     fireEvent.click(button);
     expect(screen.getByText(/Result: 15/i)).toBeInTheDocument();
   });
+
+//   Handle New Lines Between Numbers
+test('adds "1\n2,3" to equal 6', () => {
+    render(<StringCalculator />);
+    const input = screen.getByPlaceholderText('Enter numbers');
+    const button = screen.getByText('Add');
+    fireEvent.change(input, { target: { value: `1\n2,3` } }); 
+    console.log('Input value:', (input as HTMLInputElement).value);
+    fireEvent.click(button);
+    expect(screen.getByText(/Result: 6/i)).toBeInTheDocument();
+  });
+  
