@@ -4,7 +4,8 @@ const StringCalculator = forwardRef((props, ref) => {
   const [input, setInput] = useState('');
   const [result, setResult] = useState<number | null>(null);
   const [callCount, setCallCount] = useState(0);
-
+// let result=null;
+  // Expose GetCalledCount method via ref
   useImperativeHandle(ref, () => ({
     GetCalledCount: () => callCount
   }));
