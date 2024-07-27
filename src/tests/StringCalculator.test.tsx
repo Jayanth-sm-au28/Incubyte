@@ -160,3 +160,16 @@ test("tracks the number of times Add method is called", () => {
     expect(screen.getByText(/Add method called 2 times/i)).toBeInTheDocument();
   });
 
+  //  Test case 9: Numbers bigger than 1000 should be ignored
+
+  test('numbers bigger than 1000 should be ignored', () => {
+    render(<StringCalculator />);
+    const input = screen.getByPlaceholderText("Enter numbers");
+    const button = screen.getByText("Add");
+    
+    fireEvent.change(input, { target: { value: "2,1001" } });
+    fireEvent.click(button);
+    
+    expect(screen.getByText(/Result: 2/i)).toBeInTheDocument();
+  });
+  

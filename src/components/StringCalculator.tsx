@@ -12,12 +12,12 @@ const StringCalculator = forwardRef((props, ref) => {
 
   const add = (numbers: string): number => {
     setCallCount(prevCount => prevCount + 1);
-
+  
     if (numbers === '') return 0;
-
+  
     let delimiter = /[\n,]+/;
     let inputNumbers = numbers;
-
+  
     if (numbers.startsWith('//')) {
       const delimiterLineEnd = numbers.indexOf('\n');
       if (delimiterLineEnd !== -1) {
@@ -27,24 +27,24 @@ const StringCalculator = forwardRef((props, ref) => {
         inputNumbers = numbers.substring(delimiterLineEnd + 1);
       }
     }
-
+  
     const normalizedNumbers = inputNumbers.replace(/\r\n|\r/g, '\n');
     const numArray = normalizedNumbers.split(delimiter);
-
+  
     const negativeNumbers: string[] = [];
-
+  
     const parsedNumbers = numArray.map((num) => {
       const parsedNum = parseInt(num.trim(), 10);
       if (parsedNum < 0) {
         negativeNumbers.push(num.trim());
       }
-      return isNaN(parsedNum) ? 0 : parsedNum;
+      return (parsedNum > 1000) ? 0 : (isNaN(parsedNum) ? 0 : parsedNum);
     });
-
+  
     if (negativeNumbers.length > 0) {
       throw new Error(`negatives not allowed: ${negativeNumbers.join(', ')}`);
     }
-
+  
     const sum = parsedNumbers.reduce((total, num) => total + num, 0);
     return sum;
   };
