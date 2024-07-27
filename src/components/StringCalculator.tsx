@@ -5,7 +5,6 @@ const StringCalculator = forwardRef((props, ref) => {
   const [result, setResult] = useState<number | null>(null);
   const [callCount, setCallCount] = useState(0);
 
-  // Expose GetCalledCount method via ref
   useImperativeHandle(ref, () => ({
     GetCalledCount: () => callCount
   }));
@@ -24,12 +23,15 @@ const StringCalculator = forwardRef((props, ref) => {
         const delimiterLine = numbers.substring(2, delimiterLineEnd).trim();
         const cleanDelimiter = delimiterLine.replace(/[\[\]]/g, '');
         delimiter = new RegExp(`[${cleanDelimiter}]`, 'g');
+        console.log('Delimiter:', cleanDelimiter);  // Debugging line
         inputNumbers = numbers.substring(delimiterLineEnd + 1);
       }
     }
   
+    console.log('Input Numbers before splitting:', inputNumbers);  // Debugging line
     const normalizedNumbers = inputNumbers.replace(/\r\n|\r/g, '\n');
     const numArray = normalizedNumbers.split(delimiter);
+    console.log('Parsed Numbers:', numArray);  // Debugging line
   
     const negativeNumbers: string[] = [];
   
@@ -48,7 +50,8 @@ const StringCalculator = forwardRef((props, ref) => {
     const sum = parsedNumbers.reduce((total, num) => total + num, 0);
     return sum;
   };
-
+  
+  
   const handleAdd = () => {
     try {
       const sum = add(input);

@@ -148,28 +148,40 @@ test("throws an exception for multiple negative numbers", () => {
 //  Test case 7: Track Add Method Calls
 
 test("tracks the number of times Add method is called", () => {
-    render(<StringCalculator />);
-    const input = screen.getByPlaceholderText("Enter numbers");
-    const button = screen.getByText("Add");
-  
-    fireEvent.change(input, { target: { value: "1,2" } });
-    fireEvent.click(button);
-    fireEvent.change(input, { target: { value: "3,4" } });
-    fireEvent.click(button);
-  
-    expect(screen.getByText(/Add method called 2 times/i)).toBeInTheDocument();
-  });
+  render(<StringCalculator />);
+  const input = screen.getByPlaceholderText("Enter numbers");
+  const button = screen.getByText("Add");
 
-  //  Test case 9: Numbers bigger than 1000 should be ignored
+  fireEvent.change(input, { target: { value: "1,2" } });
+  fireEvent.click(button);
+  fireEvent.change(input, { target: { value: "3,4" } });
+  fireEvent.click(button);
 
-  test('numbers bigger than 1000 should be ignored', () => {
-    render(<StringCalculator />);
-    const input = screen.getByPlaceholderText("Enter numbers");
-    const button = screen.getByText("Add");
-    
-    fireEvent.change(input, { target: { value: "2,1001" } });
-    fireEvent.click(button);
-    
-    expect(screen.getByText(/Result: 2/i)).toBeInTheDocument();
-  });
-  
+  expect(screen.getByText(/Add method called 2 times/i)).toBeInTheDocument();
+});
+
+//  Test case 9: Numbers bigger than 1000 should be ignored
+
+test("numbers bigger than 1000 should be ignored", () => {
+  render(<StringCalculator />);
+  const input = screen.getByPlaceholderText("Enter numbers");
+  const button = screen.getByText("Add");
+
+  fireEvent.change(input, { target: { value: "2,1001" } });
+  fireEvent.click(button);
+
+  expect(screen.getByText(/Result: 2/i)).toBeInTheDocument();
+});
+
+//  Test case 10: Delimiters can be of any length with the following format
+
+test("custom delimiters of any length", () => {
+  render(<StringCalculator />);
+  const input = screen.getByPlaceholderText("Enter numbers");
+  const button = screen.getByText("Add");
+
+  fireEvent.change(input, { target: { value: "//[***]\n1***2***3" } });
+  fireEvent.click(button);
+
+  expect(screen.getByText(/Result: 6/i)).toBeInTheDocument();
+});
