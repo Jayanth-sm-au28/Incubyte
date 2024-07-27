@@ -57,3 +57,15 @@ test('adds "1\n2,3" to equal 6', () => {
     expect(screen.getByText(/Result: 6/i)).toBeInTheDocument();
   });
   
+
+  test('adds "1;2;3" with custom delimiter ";" to equal 6', () => {
+    render(<StringCalculator />);
+    const input = screen.getByPlaceholderText('Enter numbers') as HTMLTextAreaElement;
+    const button = screen.getByText('Add');
+  
+    fireEvent.change(input, { target: { value: '//;\n1;2;3' } });
+    fireEvent.click(button);
+  
+    expect(screen.getByText(/Result:\s*6/i)).toBeInTheDocument();
+  });
+  
