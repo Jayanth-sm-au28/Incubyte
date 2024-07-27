@@ -4,6 +4,17 @@ const StringCalculator: React.FC = () => {
   const [input, setInput] = useState('');
   const [result, setResult] = useState<number|null>(null);
 
+  // const add = (numbers: string): number => {
+  //   if (numbers === '') return 0;
+  //   const normalizedNumbers = numbers.replace(/\r\n|\r/g, '\n');
+  //   const numArray = normalizedNumbers.split(/[\n,]+/).map((num) => {
+  //     const parsedNum = parseInt(num.trim(), 10); 
+  //     console.log(`Parsed number from "${num}":`, parsedNum);
+  //     return isNaN(parsedNum) ? 0 : parsedNum; 
+  //   });
+  //   const sum = numArray.reduce((total, num) => total + num, 0);  
+  //   return sum;
+  // };
   const add = (numbers: string): number => {
     if (numbers === '') return 0;
   
@@ -19,14 +30,23 @@ const StringCalculator: React.FC = () => {
         inputNumbers = numbers.substring(delimiterLineEnd + 1);
       }
     }
+  
+    // console.log('Using delimiter:', delimiter);
+    // console.log('Input numbers:', inputNumbers);
+  
     const normalizedNumbers = inputNumbers.replace(/\r\n|\r/g, '\n');
     const numArray = normalizedNumbers.split(delimiter).map((num) => {
       const parsedNum = parseInt(num.trim(), 10);
-      return isNaN(parsedNum) ? 0 : parsedNum; 
+      if (parsedNum < 0) {
+        throw new Error(`negatives not allowed: ${num.trim()}`);
+      }
+      // console.log(`Parsed number from "${num}":`, parsedNum);
+      return isNaN(parsedNum) ? 0 : parsedNum;
     });
-    const sum = numArray.reduce((total, num) => total + num, 0);  
+    const sum = numArray.reduce((total, num) => total + num, 0);
     return sum;
   };
+  
   
   
   
