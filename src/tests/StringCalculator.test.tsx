@@ -185,3 +185,18 @@ test("custom delimiters of any length", () => {
 
   expect(screen.getByText(/Result: 6/i)).toBeInTheDocument();
 });
+
+// Testcase 11 : Handle multiple delimiters
+
+test('adds "1*2%3" with custom delimiters "*" and "%" to equal 6', () => {
+  render(<StringCalculator />);
+  const input = screen.getByPlaceholderText(
+    "Enter numbers"
+  ) as HTMLTextAreaElement;
+  const button = screen.getByText("Add");
+
+  fireEvent.change(input, { target: { value: "//[*][%]\n1*2%3" } });
+  fireEvent.click(button);
+
+  expect(screen.getByText(/Result:\s*6/i)).toBeInTheDocument();
+});

@@ -11,30 +11,32 @@ const StringCalculator = forwardRef((props, ref) => {
 
   const add = (numbers: string): number => {
     setCallCount(prevCount => prevCount + 1);
-  
+
     if (numbers === '') return 0;
-  
+
     let delimiter = /[\n,]+/;
     let inputNumbers = numbers;
-  
+
     if (numbers.startsWith('//')) {
       const delimiterLineEnd = numbers.indexOf('\n');
       if (delimiterLineEnd !== -1) {
         const delimiterLine = numbers.substring(2, delimiterLineEnd).trim();
-        const cleanDelimiter = delimiterLine.replace(/[\[\]]/g, '');
-        delimiter = new RegExp(`[${cleanDelimiter}]`, 'g');
-        console.log('Delimiter:', cleanDelimiter);  // Debugging line
+        const delimiters = delimiterLine.match(/\[(.*?)\]/g) || [];
+        if (delimiters.length > 0) {
+          const cleanDelimiters = delimiters.map(d => d.slice(1, -1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+          delimiter = new RegExp(`(${cleanDelimiters})`);
+        } else {
+          delimiter = new RegExp(delimiterLine.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        }
         inputNumbers = numbers.substring(delimiterLineEnd + 1);
       }
     }
-  
-    console.log('Input Numbers before splitting:', inputNumbers);  // Debugging line
+
     const normalizedNumbers = inputNumbers.replace(/\r\n|\r/g, '\n');
     const numArray = normalizedNumbers.split(delimiter);
-    console.log('Parsed Numbers:', numArray);  // Debugging line
-  
+
     const negativeNumbers: string[] = [];
-  
+
     const parsedNumbers = numArray.map((num) => {
       const parsedNum = parseInt(num.trim(), 10);
       if (parsedNum < 0) {
@@ -42,16 +44,15 @@ const StringCalculator = forwardRef((props, ref) => {
       }
       return (parsedNum > 1000) ? 0 : (isNaN(parsedNum) ? 0 : parsedNum);
     });
-  
+
     if (negativeNumbers.length > 0) {
       throw new Error(`negatives not allowed: ${negativeNumbers.join(', ')}`);
     }
-  
+
     const sum = parsedNumbers.reduce((total, num) => total + num, 0);
     return sum;
   };
-  
-  
+
   const handleAdd = () => {
     try {
       const sum = add(input);
