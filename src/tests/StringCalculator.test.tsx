@@ -35,3 +35,13 @@ test('adds "1,2" to equal 3', () => {
   });
   expect(screen.getByText(/Result: 3/i)).toBeInTheDocument();
 });
+
+// Handle an Unknown Amount of Numbers
+test('adds "1,2,3,4,5" to equal 15', () => {
+    render(<StringCalculator />);
+    const input = screen.getByPlaceholderText('Enter numbers');
+    const button = screen.getByText('Add');
+    fireEvent.change(input, { target: { value: '1,2,3,4,5' } });
+    fireEvent.click(button);
+    expect(screen.getByText(/Result: 15/i)).toBeInTheDocument();
+  });
